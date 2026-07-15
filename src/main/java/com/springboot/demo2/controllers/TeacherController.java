@@ -4,6 +4,8 @@ package com.springboot.demo2.controllers;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.services.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,28 +18,33 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public List<TeacherEntity> getAllTeacher(){
-        return teacherService.getAllTeachers();
+    public ResponseEntity<List<TeacherEntity>> getAllTeachers() {
+        List<TeacherEntity> teacherEntities = teacherService.getAllTeachers();
+        return ResponseEntity.ok(teacherEntities); // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
-    public TeacherEntity getTeacherById(@PathVariable Integer id){
-        return teacherService.getTeacherById(id);
+    public ResponseEntity<TeacherEntity> getTeacherById(@PathVariable Integer id) {
+        TeacherEntity teacher = teacherService.getTeacherById(id);
+        return ResponseEntity.ok(teacher); // HTTP 200 OK
     }
 
     @PostMapping
-    public TeacherEntity createTeacher(@RequestBody TeacherEntity teacher){
-        return teacherService.createTeacher(teacher);
+    public ResponseEntity<TeacherEntity> createTeacher(@RequestBody TeacherEntity teacher) {
+        TeacherEntity createdTeacher = teacherService.createTeacher(teacher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTeacher); // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
-    public TeacherEntity updateTeacher(@PathVariable Integer id, @RequestBody TeacherEntity teacher){
-        return teacherService.updateTeacher(id, teacher);
+    public ResponseEntity<TeacherEntity> updateTeacher(@PathVariable Integer id, @RequestBody TeacherEntity teacher) {
+        TeacherEntity updatedTeacher = teacherService.updateTeacher(id, teacher);
+        return ResponseEntity.ok(updatedTeacher); // HTTP 200 OK
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTeacher(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Integer id) {
         teacherService.deleteTeacher(id);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
 }
