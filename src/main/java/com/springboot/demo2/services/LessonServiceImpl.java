@@ -1,8 +1,7 @@
 package com.springboot.demo2.services;
 
-import com.springboot.demo2.dtos.LessonDTO;
+import com.springboot.demo2.dtos.LessonResponseDTO;
 import com.springboot.demo2.entities.LessonEntity;
-import com.springboot.demo2.entities.StudentEntity;
 import com.springboot.demo2.repositories.LessonsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonsRepository lessonRepository;
 
     @Override
-    public List<LessonDTO> getAllLessons() {
+    public List<LessonResponseDTO> getAllLessons() {
         List<LessonEntity> lessonEntities = lessonRepository.findAll();
         return lessonEntities.stream()
                 .map(this::convertToDTO)
@@ -38,7 +37,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonDTO getLessonById(Integer id) {
+    public LessonResponseDTO getLessonById(Integer id) {
         LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Lesson with id " + id + " not found")
         );
@@ -50,15 +49,15 @@ public class LessonServiceImpl implements LessonService {
         lessonRepository.deleteById(id);
     }
 
-    private LessonDTO convertToDTO(LessonEntity lessonEntity) {
-        LessonDTO lessonDTO = new LessonDTO();
-        lessonDTO.setLessonId(lessonEntity.getLessonId());
-        lessonDTO.setLessonName(lessonEntity.getLessonName());
+    private LessonResponseDTO convertToDTO(LessonEntity lessonEntity) {
+        LessonResponseDTO lessonResponseDTO = new LessonResponseDTO();
+        lessonResponseDTO.setLessonId(lessonEntity.getLessonId());
+        lessonResponseDTO.setLessonName(lessonEntity.getLessonName());
         if (lessonEntity.getTeacher() != null) {
             String fullName = lessonEntity.getTeacher().getName();
-            lessonDTO.setTeacherName(fullName);
+            lessonResponseDTO.setTeacherName(fullName);
         }
-        return lessonDTO;
+        return lessonResponseDTO;
     }
 
 }

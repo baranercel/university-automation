@@ -1,6 +1,6 @@
 package com.springboot.demo2.services;
 
-import com.springboot.demo2.dtos.TeacherDTO;
+import com.springboot.demo2.dtos.TeacherResponseDTO;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.repositories.TeachersRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeachersRepository teacherRepository;
 
     @Override
-    public List<TeacherDTO> getAllTeachers() {
+    public List<TeacherResponseDTO> getAllTeachers() {
         List<TeacherEntity> teacherEntities = teacherRepository.findAll();
         return teacherEntities.stream()
                 .map(this::convertToDTO)
@@ -38,7 +38,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO getTeacherById(Integer id) {
+    public TeacherResponseDTO getTeacherById(Integer id) {
         TeacherEntity teacherEntity = teacherRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Teacher not found")
         );
@@ -50,18 +50,18 @@ public class TeacherServiceImpl implements TeacherService {
         teacherRepository.deleteById(id);
     }
 
-    private TeacherDTO convertToDTO(TeacherEntity teacherEntity){
-        TeacherDTO teacherDTO = new TeacherDTO();
-        teacherDTO.setId(teacherEntity.getId());
-        teacherDTO.setName(teacherEntity.getName());
-        teacherDTO.setSurname(teacherEntity.getSurname());
-        teacherDTO.setEmail(teacherEntity.getEmail());
+    private TeacherResponseDTO convertToDTO(TeacherEntity teacherEntity){
+        TeacherResponseDTO teacherResponseDTO = new TeacherResponseDTO();
+        teacherResponseDTO.setId(teacherEntity.getId());
+        teacherResponseDTO.setName(teacherEntity.getName());
+        teacherResponseDTO.setSurname(teacherEntity.getSurname());
+        teacherResponseDTO.setEmail(teacherEntity.getEmail());
         if (teacherEntity.getLessons() != null) {
             List<String> lessons = teacherEntity.getLessons().stream()
                     .map(lesson -> lesson.getLessonName())
                     .toList();
-            teacherDTO.setLessons(lessons);
+            teacherResponseDTO.setLessons(lessons);
         }
-        return teacherDTO;
+        return teacherResponseDTO;
     }
 }

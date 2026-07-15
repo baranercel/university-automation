@@ -1,6 +1,7 @@
 package com.springboot.demo2.services;
 
-import com.springboot.demo2.dtos.StudentDTO;
+import com.springboot.demo2.dtos.StudentRequestDTO;
+import com.springboot.demo2.dtos.StudentResponseDTO;
 import com.springboot.demo2.entities.StudentEntity;
 import com.springboot.demo2.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Override
-    public List<StudentDTO> getAllStudents() {
+    public List<StudentResponseDTO> getAllStudents() {
         List<StudentEntity> studentEntities = studentRepository.findAll();
         return studentEntities.stream()
                 .map(this::convertToDTO)
@@ -24,22 +25,32 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentEntity createStudent(StudentEntity student) {
-        return studentRepository.save(student);
+    public StudentResponseDTO createStudent(StudentRequestDTO student) {
+        StudentEntity studentEntity = new StudentEntity();
+        studentEntity.setName(student.getName());
+        studentEntity.setSurname(student.getSurname());
+        studentEntity.setMailAddress(student.getMailAddress());
+
+        StudentEntity savedStudentEntity = studentRepository.save(studentEntity);
+
+        return convertToDTO(savedStudentEntity);
     }
 
     @Override
-    public StudentEntity updateStudent(Integer id, StudentEntity newStudent) {
+    public StudentResponseDTO updateStudent(Integer id, StudentRequestDTO newStudent) {
         StudentEntity existingStudent = studentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Student not found"));
         existingStudent.setName(newStudent.getName());
         existingStudent.setSurname(newStudent.getSurname());
         existingStudent.setMailAddress(newStudent.getMailAddress());
-        return studentRepository.save(existingStudent);
+
+        StudentEntity savedStudentEntity = studentRepository.save(existingStudent);
+
+        return convertToDTO(savedStudentEntity);
     }
 
     @Override
-    public StudentDTO getStudentById(Integer id) {
+    public StudentResponseDTO getStudentById(Integer id) {
         StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Student not found"));
         return convertToDTO(studentEntity);
@@ -50,19 +61,20 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
     }
 
-    private StudentDTO convertToDTO(StudentEntity entity) {
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setId(entity.getStudentId());
-        studentDTO.setName(entity.getName());
-        studentDTO.setSurname(entity.getSurname());
-        studentDTO.setEmail(entity.getMailAddress());
+    private StudentResponseDTO convertToDTO(StudentEntity entity) {
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
+        studentResponseDTO.setId(entity.getStudentId());
+        studentResponseDTO.setName(entity.getName());
+        studentResponseDTO.setSurname(entity.getSurname());
+        studentResponseDTO.setEmail(entity.getMailAddress());
 
         if (entity.getLessons() != null) {
             List<String> lessonNames = entity.getLessons().stream()
                     .map(lesson -> lesson.getLessonName())
                     .toList();
+            studentResponseDTO.setLessonNames(lessonNames);
         }
-        return studentDTO;
+        return studentResponseDTO;
     }
 }
 

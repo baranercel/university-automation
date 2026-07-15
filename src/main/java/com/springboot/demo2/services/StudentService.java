@@ -1,19 +1,20 @@
 package com.springboot.demo2.services;
 
-import com.springboot.demo2.dtos.StudentDTO;
+import com.springboot.demo2.dtos.StudentRequestDTO;
+import com.springboot.demo2.dtos.StudentResponseDTO;
 import com.springboot.demo2.entities.StudentEntity;
 
 import java.util.List;
 
 public interface StudentService {
 
-    List<StudentDTO> getAllStudents();
+    List<StudentResponseDTO> getAllStudents();
 
-    StudentEntity createStudent(StudentEntity student);
+    StudentResponseDTO createStudent(StudentRequestDTO student);
 
-    StudentEntity updateStudent(Integer id, StudentEntity newStudent);
+    StudentResponseDTO updateStudent(Integer id, StudentRequestDTO newStudent);
 
-    StudentDTO getStudentById(Integer id);
+    StudentResponseDTO getStudentById(Integer id);
 
     void deleteStudent(Integer id);
 

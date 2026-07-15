@@ -1,12 +1,12 @@
 package com.springboot.demo2.controllers;
 
 
-import com.springboot.demo2.dtos.StudentDTO;
+import com.springboot.demo2.dtos.StudentRequestDTO;
+import com.springboot.demo2.dtos.StudentResponseDTO;
 import com.springboot.demo2.entities.StudentEntity;
 import com.springboot.demo2.services.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,26 +20,26 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public ResponseEntity<List<StudentDTO>> getAllStudents(){
-        List<StudentDTO> students = studentService.getAllStudents();
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents(){
+        List<StudentResponseDTO> students = studentService.getAllStudents();
         return ResponseEntity.ok(students);  // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Integer id){
-        StudentDTO student = studentService.getStudentById(id);
+    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Integer id){
+        StudentResponseDTO student = studentService.getStudentById(id);
         return ResponseEntity.ok(student);  // HTTP 200 OK
     }
 
     @PostMapping
-    public ResponseEntity<StudentEntity> createStudent(@RequestBody StudentEntity student){
-        StudentEntity createdStudent = studentService.createStudent(student);
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO student){
+        StudentResponseDTO createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);  // HTTP 201 CREATED
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentEntity> updateStudent(@PathVariable Integer id, @RequestBody StudentEntity student){
-        StudentEntity updatedStudent = studentService.updateStudent(id, student);
+    public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Integer id, @RequestBody StudentRequestDTO student){
+        StudentResponseDTO updatedStudent = studentService.updateStudent(id, student);
         return ResponseEntity.ok(updatedStudent);  // HTTP 200 OK
     }
 
