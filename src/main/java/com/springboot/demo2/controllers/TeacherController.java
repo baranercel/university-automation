@@ -1,6 +1,7 @@
 package com.springboot.demo2.controllers;
 
 
+import com.springboot.demo2.dtos.TeacherDTO;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.services.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +19,14 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<List<TeacherEntity>> getAllTeachers() {
-        List<TeacherEntity> teacherEntities = teacherService.getAllTeachers();
+    public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
+        List<TeacherDTO> teacherEntities = teacherService.getAllTeachers();
         return ResponseEntity.ok(teacherEntities); // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeacherEntity> getTeacherById(@PathVariable Integer id) {
-        TeacherEntity teacher = teacherService.getTeacherById(id);
+    public ResponseEntity<TeacherDTO> getTeacherById(@PathVariable Integer id) {
+        TeacherDTO teacher = teacherService.getTeacherById(id);
         return ResponseEntity.ok(teacher); // HTTP 200 OK
     }
 
