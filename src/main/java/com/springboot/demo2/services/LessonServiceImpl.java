@@ -1,7 +1,10 @@
 package com.springboot.demo2.services;
 
+import com.springboot.demo2.dtos.LessonRequestDTO;
 import com.springboot.demo2.dtos.LessonResponseDTO;
 import com.springboot.demo2.entities.LessonEntity;
+import com.springboot.demo2.repositories.TeachersRepository;
+import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.repositories.LessonsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ public class LessonServiceImpl implements LessonService {
 
     private final LessonsRepository lessonRepository;
 
+    private final TeachersRepository teachersRepository;
+
     @Override
     public List<LessonResponseDTO> getAllLessons() {
         List<LessonEntity> lessonEntities = lessonRepository.findAll();
@@ -23,17 +28,37 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonEntity createLesson(LessonEntity lesson) {
-        return lessonRepository.save(lesson);
+    public LessonResponseDTO createLesson(LessonRequestDTO lesson) {
+        LessonEntity newLesson = new LessonEntity();
+        newLesson.setLessonName(lesson.getLessonName());
+
+        if (lesson.getTeacherId() != null) {
+            TeacherEntity teacher = teachersRepository.findById(lesson.getTeacherId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + lesson.getTeacherId()));
+
+            newLesson.setTeacher(teacher);
+        }
+
+        LessonEntity savedLesson = lessonRepository.save(newLesson);
+        return convertToDTO(savedLesson);
     }
 
     @Override
-    public LessonEntity updateLesson(Integer id, LessonEntity newLesson) {
+    public LessonResponseDTO updateLesson(Integer id, LessonRequestDTO newLesson) {
         LessonEntity existingEntity = lessonRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Lesson with id " + id + " not found"));
         existingEntity.setLessonName(newLesson.getLessonName());
-        existingEntity.setTeacher(newLesson.getTeacher());
-        return lessonRepository.save(existingEntity);
+        if (newLesson.getTeacherId() != null) {
+            TeacherEntity teacher = teachersRepository.findById(newLesson.getTeacherId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            existingEntity.setTeacher(teacher);
+        } else {
+            existingEntity.setTeacher(null);
+        }
+
+        LessonEntity updatedEntity = lessonRepository.save(existingEntity);
+
+        return convertToDTO(updatedEntity);
     }
 
     @Override

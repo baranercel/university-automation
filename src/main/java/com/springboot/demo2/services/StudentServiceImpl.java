@@ -2,7 +2,9 @@ package com.springboot.demo2.services;
 
 import com.springboot.demo2.dtos.StudentRequestDTO;
 import com.springboot.demo2.dtos.StudentResponseDTO;
+import com.springboot.demo2.entities.LessonEntity;
 import com.springboot.demo2.entities.StudentEntity;
+import com.springboot.demo2.repositories.LessonsRepository;
 import com.springboot.demo2.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+
+    private final LessonsRepository lessonsRepository;
 
     @Override
     public List<StudentResponseDTO> getAllStudents() {
@@ -30,6 +34,11 @@ public class StudentServiceImpl implements StudentService {
         studentEntity.setName(student.getName());
         studentEntity.setSurname(student.getSurname());
         studentEntity.setMailAddress(student.getMailAddress());
+        if (student.getLessonIds() != null && !student.getLessonIds().isEmpty()) {
+            List<LessonEntity> selectedLessons = lessonsRepository.findAllById(student.getLessonIds());
+
+            studentEntity.setLessons(selectedLessons);
+        }
 
         StudentEntity savedStudentEntity = studentRepository.save(studentEntity);
 
@@ -43,6 +52,13 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setName(newStudent.getName());
         existingStudent.setSurname(newStudent.getSurname());
         existingStudent.setMailAddress(newStudent.getMailAddress());
+
+        if (newStudent.getLessonIds() != null && !newStudent.getLessonIds().isEmpty()) {
+            List<LessonEntity> updatedLessons = lessonsRepository.findAllById(newStudent.getLessonIds());
+            existingStudent.setLessons(updatedLessons);
+        } else {
+            existingStudent.setLessons(null);
+        }
 
         StudentEntity savedStudentEntity = studentRepository.save(existingStudent);
 

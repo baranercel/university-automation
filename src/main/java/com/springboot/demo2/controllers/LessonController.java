@@ -1,5 +1,6 @@
 package com.springboot.demo2.controllers;
 
+import com.springboot.demo2.dtos.LessonRequestDTO;
 import com.springboot.demo2.dtos.LessonResponseDTO;
 import com.springboot.demo2.entities.LessonEntity;
 import com.springboot.demo2.services.LessonService;
@@ -31,14 +32,14 @@ public class LessonController {
     }
 
     @PostMapping
-    public ResponseEntity<LessonEntity> createLesson(@RequestBody LessonEntity lesson){
-        LessonEntity createdLesson = lessonService.createLesson(lesson);
+    public ResponseEntity<LessonResponseDTO> createLesson(@RequestBody LessonRequestDTO lesson){
+        LessonResponseDTO createdLesson = lessonService.createLesson(lesson);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLesson);  // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LessonEntity> updateLesson(@PathVariable Integer id, @RequestBody LessonEntity lesson){
-        LessonEntity updatedLesson = lessonService.updateLesson(id, lesson);
+    public ResponseEntity<LessonResponseDTO> updateLesson(@PathVariable Integer id, @RequestBody LessonRequestDTO lesson){
+        LessonResponseDTO updatedLesson = lessonService.updateLesson(id, lesson);
         return ResponseEntity.ok(updatedLesson);   // HTTP 200 OK
     }
 
