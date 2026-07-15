@@ -1,5 +1,6 @@
 package com.springboot.demo2.controllers;
 
+import com.springboot.demo2.dtos.LessonDTO;
 import com.springboot.demo2.entities.LessonEntity;
 import com.springboot.demo2.services.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +19,14 @@ public class LessonController {
 
 
     @GetMapping
-    public ResponseEntity<List<LessonEntity>> getAllLessons(){
-        List<LessonEntity> lessons = lessonService.getAllLessons();
+    public ResponseEntity<List<LessonDTO>> getAllLessons(){
+        List<LessonDTO> lessons = lessonService.getAllLessons();
         return ResponseEntity.ok(lessons);  // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LessonEntity> getLessonById(@PathVariable Integer id){
-        LessonEntity lesson = lessonService.getLessonById(id);
+    public ResponseEntity<LessonDTO> getLessonById(@PathVariable Integer id){
+        LessonDTO lesson = lessonService.getLessonById(id);
         return ResponseEntity.ok(lesson);   // HTTP 200 OK
     }
 
