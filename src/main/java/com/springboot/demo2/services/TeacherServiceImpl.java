@@ -1,5 +1,6 @@
 package com.springboot.demo2.services;
 
+import com.springboot.demo2.dtos.TeacherRequestDTO;
 import com.springboot.demo2.dtos.TeacherResponseDTO;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.repositories.TeachersRepository;
@@ -23,18 +24,28 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherEntity createTeacher(TeacherEntity teacher) {
-        return teacherRepository.save(teacher);
+    public TeacherResponseDTO createTeacher(TeacherRequestDTO teacher) {
+        TeacherEntity newTeacher = new TeacherEntity();
+        newTeacher.setName(teacher.getName());
+        newTeacher.setSurname(teacher.getSurname());
+        newTeacher.setEmail(teacher.getEmail());
+
+        TeacherEntity createdTeacher = teacherRepository.save(newTeacher);
+
+        return convertToDTO(createdTeacher);
     }
 
     @Override
-    public TeacherEntity updateTeacher(Integer id, TeacherEntity newTeacher) {
+    public TeacherResponseDTO updateTeacher(Integer id, TeacherRequestDTO newTeacher) {
         TeacherEntity existingTeacher = teacherRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Teacher with id " + id + " not found"));
         existingTeacher.setName(newTeacher.getName());
         existingTeacher.setSurname(newTeacher.getSurname());
         existingTeacher.setEmail(newTeacher.getEmail());
-        return teacherRepository.save(existingTeacher);
+
+        TeacherEntity updatedEntity = teacherRepository.save(existingTeacher);
+
+        return convertToDTO(updatedEntity);
     }
 
     @Override

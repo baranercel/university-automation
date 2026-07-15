@@ -1,6 +1,7 @@
 package com.springboot.demo2.controllers;
 
 
+import com.springboot.demo2.dtos.TeacherRequestDTO;
 import com.springboot.demo2.dtos.TeacherResponseDTO;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.services.TeacherService;
@@ -31,14 +32,14 @@ public class TeacherController {
     }
 
     @PostMapping
-    public ResponseEntity<TeacherEntity> createTeacher(@RequestBody TeacherEntity teacher) {
-        TeacherEntity createdTeacher = teacherService.createTeacher(teacher);
+    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody TeacherRequestDTO teacher) {
+        TeacherResponseDTO createdTeacher = teacherService.createTeacher(teacher);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTeacher); // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeacherEntity> updateTeacher(@PathVariable Integer id, @RequestBody TeacherEntity teacher) {
-        TeacherEntity updatedTeacher = teacherService.updateTeacher(id, teacher);
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Integer id, @RequestBody TeacherRequestDTO teacher) {
+        TeacherResponseDTO updatedTeacher = teacherService.updateTeacher(id, teacher);
         return ResponseEntity.ok(updatedTeacher); // HTTP 200 OK
     }
 
