@@ -5,6 +5,7 @@ import com.springboot.demo2.dtos.StudentRequestDTO;
 import com.springboot.demo2.dtos.StudentResponseDTO;
 import com.springboot.demo2.entities.StudentEntity;
 import com.springboot.demo2.services.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +33,13 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO student){
+    public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO student){
         StudentResponseDTO createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);  // HTTP 201 CREATED
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Integer id, @RequestBody StudentRequestDTO student){
+    public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Integer id,@Valid @RequestBody StudentRequestDTO student){
         StudentResponseDTO updatedStudent = studentService.updateStudent(id, student);
         return ResponseEntity.ok(updatedStudent);  // HTTP 200 OK
     }
