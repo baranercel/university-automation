@@ -1,5 +1,6 @@
 package com.springboot.demo2.services;
 
+import com.springboot.demo2.mappers.StudentMapper;
 import com.springboot.demo2.dtos.StudentRequestDTO;
 import com.springboot.demo2.dtos.StudentResponseDTO;
 import com.springboot.demo2.entities.LessonEntity;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,38 +22,28 @@ public class StudentServiceImpl implements StudentService {
 
     private final LessonsRepository lessonsRepository;
 
+    private final StudentMapper studentMapper;
+
     @Override
     public List<StudentResponseDTO> getAllStudents() {
         List<StudentEntity> studentEntities = studentRepository.findAll();
         return studentEntities.stream()
-                .map(this::convertToDTO)
-                .toList();
+                .map(studentMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public StudentResponseDTO createStudent(StudentRequestDTO student) {
-        StudentEntity studentEntity = new StudentEntity();
-        studentEntity.setName(student.getName());
-        studentEntity.setSurname(student.getSurname());
-        studentEntity.setMailAddress(student.getMailAddress());
-        if (student.getLessonIds() != null && !student.getLessonIds().isEmpty()) {
-            List<LessonEntity> selectedLessons = lessonsRepository.findAllById(student.getLessonIds());
-
-            studentEntity.setLessons(selectedLessons);
-        }
-
+        StudentEntity studentEntity = studentMapper.toEntity(student);
         StudentEntity savedStudentEntity = studentRepository.save(studentEntity);
-
-        return convertToDTO(savedStudentEntity);
+        return studentMapper.toResponseDTO(savedStudentEntity);
     }
 
     @Override
     public StudentResponseDTO updateStudent(Integer id, StudentRequestDTO newStudent) {
         StudentEntity existingStudent = studentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Student not found"));
-        existingStudent.setName(newStudent.getName());
-        existingStudent.setSurname(newStudent.getSurname());
-        existingStudent.setMailAddress(newStudent.getMailAddress());
+        studentMapper.updateEntityFromDTO(newStudent, existingStudent);
 
         if (newStudent.getLessonIds() != null && !newStudent.getLessonIds().isEmpty()) {
             List<LessonEntity> updatedLessons = lessonsRepository.findAllById(newStudent.getLessonIds());
@@ -62,14 +54,14 @@ public class StudentServiceImpl implements StudentService {
 
         StudentEntity savedStudentEntity = studentRepository.save(existingStudent);
 
-        return convertToDTO(savedStudentEntity);
+        return studentMapper.toResponseDTO(savedStudentEntity);
     }
 
     @Override
     public StudentResponseDTO getStudentById(Integer id) {
         StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Student not found"));
-        return convertToDTO(studentEntity);
+        return studentMapper.toResponseDTO(studentEntity);
     }
 
     @Override
@@ -77,20 +69,5 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
     }
 
-    private StudentResponseDTO convertToDTO(StudentEntity entity) {
-        StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
-        studentResponseDTO.setId(entity.getStudentId());
-        studentResponseDTO.setName(entity.getName());
-        studentResponseDTO.setSurname(entity.getSurname());
-        studentResponseDTO.setEmail(entity.getMailAddress());
-
-        if (entity.getLessons() != null) {
-            List<String> lessonNames = entity.getLessons().stream()
-                    .map(lesson -> lesson.getLessonName())
-                    .toList();
-            studentResponseDTO.setLessonNames(lessonNames);
-        }
-        return studentResponseDTO;
-    }
 }
 
