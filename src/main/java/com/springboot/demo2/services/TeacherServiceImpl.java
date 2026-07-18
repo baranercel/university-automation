@@ -4,12 +4,13 @@ import com.springboot.demo2.dtos.TeacherRequestDTO;
 import com.springboot.demo2.dtos.TeacherResponseDTO;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.mappers.TeacherMapper;
-import com.springboot.demo2.repositories.LessonsRepository;
 import com.springboot.demo2.repositories.TeachersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +18,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeachersRepository teacherRepository;
 
-    private final LessonsRepository lessonsRepository;
 
     private final TeacherMapper teacherMapper;
 
     @Override
-    public List<TeacherResponseDTO> getAllTeachers() {
-        List<TeacherEntity> teacherEntities = teacherRepository.findAll();
-        return teacherEntities.stream()
-                .map(teacherMapper::teacherResponseDTO)
-                .toList();
+    public Page<TeacherResponseDTO> getAllTeachers(int  pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<TeacherEntity> teacherPage = teacherRepository.findAll(pageable);
+        return teacherPage.map(teacherMapper::teacherResponseDTO);
     }
 
     @Override

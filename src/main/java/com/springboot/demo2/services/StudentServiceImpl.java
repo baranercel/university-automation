@@ -8,11 +8,13 @@ import com.springboot.demo2.entities.StudentEntity;
 import com.springboot.demo2.repositories.LessonsRepository;
 import com.springboot.demo2.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,16 +27,21 @@ public class StudentServiceImpl implements StudentService {
     private final StudentMapper studentMapper;
 
     @Override
-    public List<StudentResponseDTO> getAllStudents() {
-        List<StudentEntity> studentEntities = studentRepository.findAll();
-        return studentEntities.stream()
-                .map(studentMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<StudentResponseDTO> getAllStudents(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<StudentEntity> studentPage = studentRepository.findAll(pageable);
+
+        return studentPage.map(studentMapper::toResponseDTO);
     }
 
     @Override
     public StudentResponseDTO createStudent(StudentRequestDTO student) {
         StudentEntity studentEntity = studentMapper.toEntity(student);
+        if (student.getLessonIds() !=null && !student.getLessonIds().isEmpty()){
+            List<LessonEntity> lessons = lessonsRepository.findAllById(student.getLessonIds());
+            studentEntity.setLessons(lessons);
+        }
         StudentEntity savedStudentEntity = studentRepository.save(studentEntity);
         return studentMapper.toResponseDTO(savedStudentEntity);
     }

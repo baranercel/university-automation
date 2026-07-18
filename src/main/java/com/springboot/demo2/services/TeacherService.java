@@ -2,12 +2,11 @@ package com.springboot.demo2.services;
 
 import com.springboot.demo2.dtos.TeacherRequestDTO;
 import com.springboot.demo2.dtos.TeacherResponseDTO;
-import com.springboot.demo2.entities.TeacherEntity;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface TeacherService {
-    List<TeacherResponseDTO> getAllTeachers();
+    Page<TeacherResponseDTO> getAllTeachers(int pageNo, int pageSize);
 
     TeacherResponseDTO createTeacher(TeacherRequestDTO teacherRequestDTO);
 

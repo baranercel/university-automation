@@ -2,12 +2,10 @@ package com.springboot.demo2.services;
 
 import com.springboot.demo2.dtos.LessonRequestDTO;
 import com.springboot.demo2.dtos.LessonResponseDTO;
-import com.springboot.demo2.entities.LessonEntity;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface LessonService {
-    List<LessonResponseDTO> getAllLessons();
+    Page<LessonResponseDTO> getAllLessons(int pageNo, int pageSize);
 
     LessonResponseDTO updateLesson(Integer id, LessonRequestDTO newLesson);
 

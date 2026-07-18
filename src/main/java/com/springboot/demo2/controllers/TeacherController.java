@@ -3,15 +3,14 @@ package com.springboot.demo2.controllers;
 
 import com.springboot.demo2.dtos.TeacherRequestDTO;
 import com.springboot.demo2.dtos.TeacherResponseDTO;
-import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.services.TeacherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/teachers")
@@ -21,9 +20,11 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<List<TeacherResponseDTO>> getAllTeachers() {
-        List<TeacherResponseDTO> teacherEntities = teacherService.getAllTeachers();
-        return ResponseEntity.ok(teacherEntities); // HTTP 200 OK
+    public ResponseEntity<Page<TeacherResponseDTO>> getAllTeachers(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        return ResponseEntity.ok(teacherService.getAllTeachers(pageNo,pageSize)); // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
@@ -39,7 +40,7 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Integer id,@Valid @RequestBody TeacherRequestDTO teacher) {
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Integer id, @Valid @RequestBody TeacherRequestDTO teacher) {
         TeacherResponseDTO updatedTeacher = teacherService.updateTeacher(id, teacher);
         return ResponseEntity.ok(updatedTeacher); // HTTP 200 OK
     }

@@ -8,9 +8,11 @@ import com.springboot.demo2.repositories.TeachersRepository;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.repositories.LessonsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +25,10 @@ public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
 
     @Override
-    public List<LessonResponseDTO> getAllLessons() {
-        List<LessonEntity> lessonEntities = lessonRepository.findAll();
-        return lessonEntities.stream()
-                .map(lessonMapper::toResponseDTO)
-                .toList();
+    public Page<LessonResponseDTO> getAllLessons(int  pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<LessonEntity> lessonPage = lessonRepository.findAll(pageable);
+        return lessonPage.map(lessonMapper::toResponseDTO);
     }
 
     @Override

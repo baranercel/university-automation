@@ -2,13 +2,12 @@ package com.springboot.demo2.services;
 
 import com.springboot.demo2.dtos.StudentRequestDTO;
 import com.springboot.demo2.dtos.StudentResponseDTO;
-import com.springboot.demo2.entities.StudentEntity;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface StudentService {
 
-    List<StudentResponseDTO> getAllStudents();
+    Page<StudentResponseDTO> getAllStudents(int pageNo, int pageSize);
 
     StudentResponseDTO createStudent(StudentRequestDTO student);
 
