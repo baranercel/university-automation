@@ -3,6 +3,7 @@ package com.springboot.demo2.services;
 import com.springboot.demo2.dtos.LessonRequestDTO;
 import com.springboot.demo2.dtos.LessonResponseDTO;
 import com.springboot.demo2.entities.LessonEntity;
+import com.springboot.demo2.mappers.LessonMapper;
 import com.springboot.demo2.repositories.TeachersRepository;
 import com.springboot.demo2.entities.TeacherEntity;
 import com.springboot.demo2.repositories.LessonsRepository;
@@ -19,18 +20,19 @@ public class LessonServiceImpl implements LessonService {
 
     private final TeachersRepository teachersRepository;
 
+    private final LessonMapper lessonMapper;
+
     @Override
     public List<LessonResponseDTO> getAllLessons() {
         List<LessonEntity> lessonEntities = lessonRepository.findAll();
         return lessonEntities.stream()
-                .map(this::convertToDTO)
+                .map(lessonMapper::toResponseDTO)
                 .toList();
     }
 
     @Override
     public LessonResponseDTO createLesson(LessonRequestDTO lesson) {
-        LessonEntity newLesson = new LessonEntity();
-        newLesson.setLessonName(lesson.getLessonName());
+        LessonEntity newLesson  = lessonMapper.toEntity(lesson);
 
         if (lesson.getTeacherId() != null) {
             TeacherEntity teacher = teachersRepository.findById(lesson.getTeacherId())
@@ -40,14 +42,14 @@ public class LessonServiceImpl implements LessonService {
         }
 
         LessonEntity savedLesson = lessonRepository.save(newLesson);
-        return convertToDTO(savedLesson);
+        return lessonMapper.toResponseDTO(savedLesson);
     }
 
     @Override
     public LessonResponseDTO updateLesson(Integer id, LessonRequestDTO newLesson) {
         LessonEntity existingEntity = lessonRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Lesson with id " + id + " not found"));
-        existingEntity.setLessonName(newLesson.getLessonName());
+        lessonMapper.updateEntityFromDTO(newLesson, existingEntity);
         if (newLesson.getTeacherId() != null) {
             TeacherEntity teacher = teachersRepository.findById(newLesson.getTeacherId())
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
@@ -58,7 +60,7 @@ public class LessonServiceImpl implements LessonService {
 
         LessonEntity updatedEntity = lessonRepository.save(existingEntity);
 
-        return convertToDTO(updatedEntity);
+        return lessonMapper.toResponseDTO(updatedEntity);
     }
 
     @Override
@@ -66,23 +68,12 @@ public class LessonServiceImpl implements LessonService {
         LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Lesson with id " + id + " not found")
         );
-        return convertToDTO(lessonEntity);
+        return lessonMapper.toResponseDTO(lessonEntity);
     }
 
     @Override
     public void deleteLesson(Integer id) {
         lessonRepository.deleteById(id);
-    }
-
-    private LessonResponseDTO convertToDTO(LessonEntity lessonEntity) {
-        LessonResponseDTO lessonResponseDTO = new LessonResponseDTO();
-        lessonResponseDTO.setLessonId(lessonEntity.getLessonId());
-        lessonResponseDTO.setLessonName(lessonEntity.getLessonName());
-        if (lessonEntity.getTeacher() != null) {
-            String fullName = lessonEntity.getTeacher().getName();
-            lessonResponseDTO.setTeacherName(fullName);
-        }
-        return lessonResponseDTO;
     }
 
 }
