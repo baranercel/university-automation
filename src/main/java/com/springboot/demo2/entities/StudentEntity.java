@@ -19,6 +19,7 @@ public class StudentEntity {
     private String name;
     private String surname;
     private String mailAddress;
+    private String password;
 
     @ManyToMany
     @JoinTable(

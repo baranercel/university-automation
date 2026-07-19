@@ -23,6 +23,7 @@ public class TeacherEntity {
     private String name;
     private String surname;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "teacher" , cascade = CascadeType.ALL)
     private List<LessonEntity> lessons;

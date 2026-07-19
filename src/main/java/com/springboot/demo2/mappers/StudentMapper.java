@@ -37,6 +37,7 @@ public class StudentMapper {
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setMailAddress(dto.getMailAddress());
+        entity.setPassword(dto.getPassword());
 
         return entity;
     }
@@ -48,6 +49,7 @@ public class StudentMapper {
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setMailAddress(dto.getMailAddress());
+        entity.setPassword(dto.getPassword());
     }
 
 }

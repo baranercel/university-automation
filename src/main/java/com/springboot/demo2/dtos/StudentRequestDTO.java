@@ -26,4 +26,8 @@ public class StudentRequestDTO {
     @NotEmpty(message = "At least one lesson must be selected")
     private List<Integer> lessonIds;
 
+    @NotBlank(message = "Password can't be blank!")
+    @Size(min = 6,message = "Password must be at least 6 characters")
+    private String password;
+
 }
