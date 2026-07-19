@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -28,6 +29,8 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentMapper studentMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public Page<StudentResponseDTO> getAllStudents(int pageNo, int pageSize) {
         log.info("getAllStudents method invoked. Requested page {}, requested page size {}", pageNo, pageSize);
@@ -42,6 +45,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO createStudent(StudentRequestDTO student) {
         log.info("A new students is being added to the system {} {}",student.getName(),student.getSurname());
         StudentEntity studentEntity = studentMapper.toEntity(student);
+        studentEntity.setPassword(passwordEncoder.encode(studentEntity.getPassword()));
         if (student.getLessonIds() !=null && !student.getLessonIds().isEmpty()){
             List<LessonEntity> lessons = lessonsRepository.findAllById(student.getLessonIds());
             studentEntity.setLessons(lessons);

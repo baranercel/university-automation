@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,6 +21,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeachersRepository teacherRepository;
 
     private final TeacherMapper teacherMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<TeacherResponseDTO> getAllTeachers(int  pageNo, int pageSize) {
@@ -35,6 +38,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponseDTO createTeacher(TeacherRequestDTO teacher) {
         log.info("createTeacher() method invoked. Requested Teacher: {}", teacher);
         TeacherEntity newTeacher = teacherMapper.toEntity(teacher);
+        newTeacher.setPassword(passwordEncoder.encode(newTeacher.getPassword()));
 
         TeacherEntity createdTeacher = teacherRepository.save(newTeacher);
         log.info("Successfully created the teacher from the database. Teacher Id {}", createdTeacher.getId());
