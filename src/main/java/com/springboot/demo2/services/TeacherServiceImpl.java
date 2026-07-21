@@ -52,6 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherEntity existingTeacher = teacherRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Teacher with id " + id + " not found"));
         teacherMapper.updateEntityFromDTO(newTeacher, existingTeacher);
+        existingTeacher.setPassword(passwordEncoder.encode(newTeacher.getPassword()));
 
         TeacherEntity updatedEntity = teacherRepository.save(existingTeacher);
         log.info("Successfully updated the teacher from the database. Teacher Id {}", updatedEntity.getId());

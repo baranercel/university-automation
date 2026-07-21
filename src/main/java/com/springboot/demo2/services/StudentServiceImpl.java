@@ -61,6 +61,7 @@ public class StudentServiceImpl implements StudentService {
         StudentEntity existingStudent = studentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Student not found"));
         studentMapper.updateEntityFromDTO(newStudent, existingStudent);
+        existingStudent.setPassword(passwordEncoder.encode(newStudent.getPassword()));
 
         if (newStudent.getLessonIds() != null && !newStudent.getLessonIds().isEmpty()) {
             List<LessonEntity> updatedLessons = lessonsRepository.findAllById(newStudent.getLessonIds());
