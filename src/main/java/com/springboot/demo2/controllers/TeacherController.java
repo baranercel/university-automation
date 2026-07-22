@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,18 +35,21 @@ public class TeacherController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<TeacherResponseDTO> createTeacher(@Valid @RequestBody TeacherRequestDTO teacher) {
         TeacherResponseDTO createdTeacher = teacherService.createTeacher(teacher);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTeacher); // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Integer id, @Valid @RequestBody TeacherRequestDTO teacher) {
         TeacherResponseDTO updatedTeacher = teacherService.updateTeacher(id, teacher);
         return ResponseEntity.ok(updatedTeacher); // HTTP 200 OK
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteTeacher(@PathVariable Integer id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
