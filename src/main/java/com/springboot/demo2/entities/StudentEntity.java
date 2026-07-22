@@ -22,7 +22,7 @@ public class StudentEntity implements UserDetails {
 
     private String name;
     private String surname;
-    private String mailAddress;
+    private String emailAddress;
     private String password;
 
     @ManyToMany
@@ -42,7 +42,7 @@ public class StudentEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.mailAddress;
+        return this.emailAddress;
     }
 
     @Override

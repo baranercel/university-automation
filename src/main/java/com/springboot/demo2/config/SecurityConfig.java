@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 1. GÜNCELLEME: Filtreyi ve Provider'ı doğrudan metoda parametre olarak verdik.
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -33,6 +32,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/students", "/api/teachers").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
@@ -41,7 +42,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 2. GÜNCELLEME: UserDetailsService'i doğrudan metoda parametre olarak verdik.
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);

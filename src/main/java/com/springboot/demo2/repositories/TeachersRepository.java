@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface TeachersRepository  extends JpaRepository<TeacherEntity,Integer> {
 
-    Optional<TeacherEntity> findByMailAddress(String email);
+    Optional<TeacherEntity> findByEmailAddress(String email);
 
 
 

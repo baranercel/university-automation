@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (student.isPresent()){ //Username is an email address
             return student.get();
         }
-        Optional<TeacherEntity> teacher = teachersRepository.findByMailAddress(username);
+        Optional<TeacherEntity> teacher = teachersRepository.findByEmailAddress(username);
         if (teacher.isPresent()){
             return teacher.get();
         }

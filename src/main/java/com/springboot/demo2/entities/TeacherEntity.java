@@ -26,7 +26,7 @@ public class TeacherEntity implements UserDetails {
 
     private String name;
     private String surname;
-    private String email;
+    private String emailAddress;
     private String password;
 
     @OneToMany(mappedBy = "teacher" , cascade = CascadeType.ALL)
@@ -40,7 +40,7 @@ public class TeacherEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.emailAddress;
     }
 
     @Override

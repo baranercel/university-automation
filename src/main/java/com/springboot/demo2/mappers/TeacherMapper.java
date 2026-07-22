@@ -16,7 +16,7 @@ public class TeacherMapper {
         responseDTO.setId(entity.getId());
         responseDTO.setName(entity.getName());
         responseDTO.setSurname(entity.getSurname());
-        responseDTO.setEmail(entity.getEmail());
+        responseDTO.setEmail(entity.getEmailAddress());
         if (entity.getLessons() != null){
             responseDTO.setLessons(entity.getLessons().stream()
                     .map(LessonEntity::getLessonName)
@@ -29,7 +29,7 @@ public class TeacherMapper {
         TeacherEntity entity = new TeacherEntity();
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
-        entity.setEmail(dto.getEmail());
+        entity.setEmailAddress(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
         return entity;
@@ -42,7 +42,7 @@ public class TeacherMapper {
 
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
-        entity.setEmail(dto.getEmail());
+        entity.setEmailAddress(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
     }
