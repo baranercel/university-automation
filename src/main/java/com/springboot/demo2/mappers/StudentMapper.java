@@ -20,7 +20,7 @@ public class StudentMapper {
         dto.setId(student.getStudentId());
         dto.setName(student.getName());
         dto.setSurname(student.getSurname());
-        dto.setEmail(student.getEmailAddress());
+        dto.setEmailAddress(student.getEmailAddress());
 
         if (student.getLessons() != null){
             dto.setLessonNames(student.getLessons().stream()
@@ -36,7 +36,7 @@ public class StudentMapper {
         StudentEntity entity = new StudentEntity();
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
-        entity.setEmailAddress(dto.getMailAddress());
+        entity.setEmailAddress(dto.getEmailAddress());
         entity.setPassword(dto.getPassword());
 
         return entity;
@@ -48,7 +48,7 @@ public class StudentMapper {
         }
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
-        entity.setEmailAddress(dto.getMailAddress());
+        entity.setEmailAddress(dto.getEmailAddress());
         entity.setPassword(dto.getPassword());
     }
 

@@ -18,7 +18,7 @@ public class TeacherRequestDTO {
 
     @NotBlank(message = "Email address can't be blank!")
     @Email(message = "Please provide a valid email address!")
-    private String email;
+    private String emailAddress;
 
     @NotBlank(message = "Password can't be blank!")
     @Size(min = 6,message = "Password must be at least 6 characters")

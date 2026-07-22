@@ -10,7 +10,7 @@ public class TeacherResponseDTO {
     private Integer id;
     private String name;
     private String surname;
-    private String email;
+    private String emailAddress;
     private List<String> lessons;
 
 }

@@ -21,7 +21,7 @@ public class StudentRequestDTO {
 
     @NotBlank(message = "Email address can't be blank!")
     @Email(message = "Please provide a valid email address!")
-    private String mailAddress;
+    private String emailAddress;
 
     @NotEmpty(message = "At least one lesson must be selected")
     private List<Integer> lessonIds;
